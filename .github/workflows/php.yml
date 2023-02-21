@@ -2,21 +2,19 @@ name: PHP Composer
 
 on:
   push:
-    branches: [ "master" ]
+    branches: ["master"]
   pull_request:
-    branches: [ "master" ]
+    branches: ["master"]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: install composer
-      run: composer install
+      - name: install composer
+        run: composer install
 
-    - name: run phpstan
-      run: ./vendor/bin/phpstan analyse src --level 5
-      
+      - name: run phpstan
+        run: ./vendor/bin/phpstan analyse src --level 5
