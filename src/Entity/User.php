@@ -8,235 +8,225 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use App\Entity\Trait\RegisteredAtTrait;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+  use registeredAtTrait;
 
-    #[ORM\Column(length: 180, unique: true)]
-    private ?string $email = null;
+  #[ORM\Id]
+  #[ORM\GeneratedValue]
+  #[ORM\Column]
+  private ?int $id = null;
 
-    #[ORM\Column]
-    private array $roles = [];
+  #[ORM\Column(length: 180, unique: true)]
+  private ?string $email = null;
 
-    /**
-     * @var string The hashed password
-     */
-    #[ORM\Column]
-    private ?string $password = null;
+  #[ORM\Column]
+  private array $roles = [];
 
-    #[ORM\Column(type: 'boolean')]
-    private $isVerified = false;
+  /**
+   * @var string The hashed password
+   */
+  #[ORM\Column]
+  private ?string $password = null;
 
-    #[ORM\Column(length: 50, nullable: true)]
-    private ?string $FirstName = null;
+  #[ORM\Column(type: 'boolean')]
+  private $isVerified = false;
 
-    #[ORM\Column(length: 50, nullable: true)]
-    private ?string $MiddleName = null;
+  #[ORM\Column(length: 50, nullable: true)]
+  private ?string $FirstName = null;
 
-    #[ORM\Column(length: 50, nullable: true)]
-    private ?string $LastName = null;
+  #[ORM\Column(length: 50, nullable: true)]
+  private ?string $MiddleName = null;
 
-    #[ORM\Column(length: 15, nullable: true)]
-    private ?string $Mobile = null;
+  #[ORM\Column(length: 50, nullable: true)]
+  private ?string $LastName = null;
 
-
-    #[ORM\Column(length: 1, nullable: true)]
-    private ?string $Vendor = null;
-
-    #[ORM\Column]
-    private ?\DateTimeImmutable $RegisteredAt = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $LastLogin = null;
-
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $Intro = null;
-
-    #[ORM\Column(length: 50, nullable: true)]
-    private ?string $Profile = null;
-
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
+  #[ORM\Column(length: 15, nullable: true)]
+  private ?string $Mobile = null;
 
 
-    /**
-     * A visual identifier that represents this user.
-     *
-     * @see UserInterface
-     */
-    public function getUserIdentifier(): string
-    {
-        return (string) $this->email;
-    }
+  #[ORM\Column(length: 1, nullable: true)]
+  private ?string $Vendor = null;
 
-    /**
-     * @see UserInterface
-     */
-    public function getRoles(): array
-    {
-        $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
 
-        return array_unique($roles);
-    }
 
-    public function setRoles(array $roles): self
-    {
-        $this->roles = $roles;
+  #[ORM\Column(nullable: true)]
+  private ?\DateTimeImmutable $LastLogin = null;
 
-        return $this;
-    }
+  #[ORM\Column(type: Types::TEXT)]
+  private ?string $Intro = null;
 
-    /**
-     * @see PasswordAuthenticatedUserInterface
-     */
-    public function getPassword(): string
-    {
-        return $this->password;
-    }
+  #[ORM\Column(length: 50, nullable: true)]
+  private ?string $Profile = null;
 
-    public function setPassword(string $password): self
-    {
-        $this->password = $password;
+  public function getId(): ?int
+  {
+    return $this->id;
+  }
 
-        return $this;
-    }
 
-    /**
-     * @see UserInterface
-     */
-    public function eraseCredentials()
-    {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
-    }
+  /**
+   * A visual identifier that represents this user.
+   *
+   * @see UserInterface
+   */
+  public function getUserIdentifier(): string
+  {
+    return (string) $this->email;
+  }
 
-    public function isVerified(): bool
-    {
-        return $this->isVerified;
-    }
+  /**
+   * @see UserInterface
+   */
+  public function getRoles(): array
+  {
+    $roles = $this->roles;
+    // guarantee every user at least has ROLE_USER
+    $roles[] = 'ROLE_USER';
 
-    public function setIsVerified(bool $isVerified): self
-    {
-        $this->isVerified = $isVerified;
+    return array_unique($roles);
+  }
 
-        return $this;
-    }
+  public function setRoles(array $roles): self
+  {
+    $this->roles = $roles;
 
-    public function getFirstName(): ?string
-    {
-        return $this->FirstName;
-    }
+    return $this;
+  }
 
-    public function setFirstName(?string $FirstName): self
-    {
-        $this->FirstName = $FirstName;
+  /**
+   * @see PasswordAuthenticatedUserInterface
+   */
+  public function getPassword(): string
+  {
+    return $this->password;
+  }
 
-        return $this;
-    }
+  public function setPassword(string $password): self
+  {
+    $this->password = $password;
 
-    public function getMiddleName(): ?string
-    {
-        return $this->MiddleName;
-    }
+    return $this;
+  }
 
-    public function setMiddleName(?string $MiddleName): self
-    {
-        $this->MiddleName = $MiddleName;
+  /**
+   * @see UserInterface
+   */
+  public function eraseCredentials()
+  {
+    // If you store any temporary, sensitive data on the user, clear it here
+    // $this->plainPassword = null;
+  }
 
-        return $this;
-    }
+  public function isVerified(): bool
+  {
+    return $this->isVerified;
+  }
 
-    public function getLastName(): ?string
-    {
-        return $this->LastName;
-    }
+  public function setIsVerified(bool $isVerified): self
+  {
+    $this->isVerified = $isVerified;
 
-    public function setLastName(?string $LastName): self
-    {
-        $this->LastName = $LastName;
+    return $this;
+  }
 
-        return $this;
-    }
+  public function getFirstName(): ?string
+  {
+    return $this->FirstName;
+  }
 
-    public function getMobile(): ?string
-    {
-        return $this->Mobile;
-    }
+  public function setFirstName(?string $FirstName): self
+  {
+    $this->FirstName = $FirstName;
 
-    public function setMobile(?string $Mobile): self
-    {
-        $this->Mobile = $Mobile;
+    return $this;
+  }
 
-        return $this;
-    }
+  public function getMiddleName(): ?string
+  {
+    return $this->MiddleName;
+  }
 
-    public function getVendor(): ?string
-    {
-        return $this->Vendor;
-    }
+  public function setMiddleName(?string $MiddleName): self
+  {
+    $this->MiddleName = $MiddleName;
 
-    public function setVendor(?string $Vendor): self
-    {
-        $this->Vendor = $Vendor;
+    return $this;
+  }
 
-        return $this;
-    }
+  public function getLastName(): ?string
+  {
+    return $this->LastName;
+  }
 
-    public function getRegisteredAt(): ?\DateTimeImmutable
-    {
-        return $this->RegisteredAt;
-    }
+  public function setLastName(?string $LastName): self
+  {
+    $this->LastName = $LastName;
 
-    public function setRegisteredAt(\DateTimeImmutable $RegisteredAt): self
-    {
-        $this->RegisteredAt = $RegisteredAt;
+    return $this;
+  }
 
-        return $this;
-    }
+  public function getMobile(): ?string
+  {
+    return $this->Mobile;
+  }
 
-    public function getLastLogin(): ?\DateTimeImmutable
-    {
-        return $this->LastLogin;
-    }
+  public function setMobile(?string $Mobile): self
+  {
+    $this->Mobile = $Mobile;
 
-    public function setLastLogin(?\DateTimeImmutable $LastLogin): self
-    {
-        $this->LastLogin = $LastLogin;
+    return $this;
+  }
 
-        return $this;
-    }
+  public function getVendor(): ?string
+  {
+    return $this->Vendor;
+  }
 
-    public function getIntro(): ?string
-    {
-        return $this->Intro;
-    }
+  public function setVendor(?string $Vendor): self
+  {
+    $this->Vendor = $Vendor;
 
-    public function setIntro(string $Intro): self
-    {
-        $this->Intro = $Intro;
+    return $this;
+  }
 
-        return $this;
-    }
+  public function getLastLogin(): ?\DateTimeImmutable
+  {
+    return $this->LastLogin;
+  }
 
-    public function getProfile(): ?string
-    {
-        return $this->Profile;
-    }
+  public function setLastLogin(?\DateTimeImmutable $LastLogin): self
+  {
+    $this->LastLogin = $LastLogin;
 
-    public function setProfile(?string $Profile): self
-    {
-        $this->Profile = $Profile;
+    return $this;
+  }
 
-        return $this;
-    }
+  public function getIntro(): ?string
+  {
+    return $this->Intro;
+  }
+
+  public function setIntro(string $Intro): self
+  {
+    $this->Intro = $Intro;
+
+    return $this;
+  }
+
+  public function getProfile(): ?string
+  {
+    return $this->Profile;
+  }
+
+  public function setProfile(?string $Profile): self
+  {
+    $this->Profile = $Profile;
+
+    return $this;
+  }
 }
