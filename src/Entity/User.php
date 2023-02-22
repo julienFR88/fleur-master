@@ -2,19 +2,21 @@
 
 namespace App\Entity;
 
-use App\Repository\UserRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\UserRepository;
+use App\Entity\Trait\RegisteredAtTrait;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
-use App\Entity\Trait\RegisteredAtTrait;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ORM\Table(name: '`user`')]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-  use registeredAtTrait;
+
+  use RegisteredAtTrait;
 
   #[ORM\Id]
   #[ORM\GeneratedValue]
@@ -25,7 +27,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
   private ?string $email = null;
 
   #[ORM\Column]
-  private array $roles = [];
+  private array $roles = ['ROLE_USER'];
 
   /**
    * @var string The hashed password
@@ -36,31 +38,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
   #[ORM\Column(type: 'boolean')]
   private $isVerified = false;
 
-  #[ORM\Column(length: 50, nullable: true)]
+  #[ORM\Column(length: 255, nullable: true)]
   private ?string $FirstName = null;
 
-  #[ORM\Column(length: 50, nullable: true)]
+  #[ORM\Column(length: 255, nullable: true)]
   private ?string $MiddleName = null;
 
-  #[ORM\Column(length: 50, nullable: true)]
+  #[ORM\Column(length: 255, nullable: true)]
   private ?string $LastName = null;
 
-  #[ORM\Column(length: 15, nullable: true)]
+  #[ORM\Column(length: 255, nullable: true)]
   private ?string $Mobile = null;
 
-
-  #[ORM\Column(length: 1, nullable: true)]
+  #[ORM\Column(length: 255, nullable: true)]
   private ?string $Vendor = null;
-
-
 
   #[ORM\Column(nullable: true)]
   private ?\DateTimeImmutable $LastLogin = null;
 
-  #[ORM\Column(type: Types::TEXT)]
-  private ?string $Intro = null;
+  #[ORM\Column(length: 1, nullable: true)]
+  private ?string $intro = null;
 
-  #[ORM\Column(length: 50, nullable: true)]
+  #[ORM\Column(type: Types::TEXT, nullable: true)]
   private ?string $Profile = null;
 
   public function getId(): ?int
@@ -68,6 +67,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     return $this->id;
   }
 
+  public function getEmail(): ?string
+  {
+    return $this->email;
+  }
+
+  public function setEmail(string $email): self
+  {
+    $this->email = $email;
+
+    return $this;
+  }
 
   /**
    * A visual identifier that represents this user.
@@ -208,12 +218,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
   public function getIntro(): ?string
   {
-    return $this->Intro;
+    return $this->intro;
   }
 
-  public function setIntro(string $Intro): self
+  public function setIntro(?string $intro): self
   {
-    $this->Intro = $Intro;
+    $this->intro = $intro;
 
     return $this;
   }

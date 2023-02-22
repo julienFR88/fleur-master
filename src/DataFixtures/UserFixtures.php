@@ -2,10 +2,11 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\User;
-use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Persistence\ObjectManager;
 use Faker;
+use App\Entity\User;
+use DateTimeImmutable;
+use Doctrine\Persistence\ObjectManager;
+use Doctrine\Bundle\FixturesBundle\Fixture;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserFixtures extends Fixture
@@ -16,6 +17,7 @@ class UserFixtures extends Fixture
   {
     $this->encoder = $encoder;
   }
+
   public function load(ObjectManager $manager): void
   {
     $faker = Faker\Factory::create();
@@ -28,14 +30,20 @@ class UserFixtures extends Fixture
       $user->setEmail($faker->email());
       $user->setPassword($this->encoder->hashPassword($user, '123456789'));
       $user->setIsVerified($IsVerified);
-      $user->setRoles( array('ROLE_USER') );
+      $user->setRoles(array('ROLE_USER'));
 
-      if ($IsVerified == 1) {
-        $user->setFirstName($faker->firstName());
-        $user->setLastName($faker->lastName());
-        $user->setMobile($faker->e164PhoneNumber());
-        $user->setVendor( $IsVerified );
-      }
+
+      $user->setFirstName($faker->firstName());
+      $user->setMiddleName($faker->firstName());
+      $user->setLastName($faker->lastName());
+      $user->setMobile($faker->e164PhoneNumber());
+      $user->setVendor($IsVerified);
+      $user->setRegisteredAt(new \DateTimeImmutable);
+      $user->setLastLogin(new \DateTimeImmutable);
+      $user->setIntro('1');
+      $user->setProfile('88');
+
+      $manager->persist($user);
     }
 
     $manager->flush();
