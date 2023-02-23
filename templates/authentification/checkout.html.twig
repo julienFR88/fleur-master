@@ -39,26 +39,11 @@
 							<div id="ltn__returning-customer-login" class="collapse ltn__checkout-single-content-info">
 								<div class="ltn_coupon-code-form ltn__form-box">
 									<p>Please login your accont.</p>
-									<form action="#">
-										<div class="row">
-											<div class="col-md-6">
-												<div class="input-item input-item-name ltn__custom-icon">
-													<input type="text" name="ltn__name" placeholder="Enter your name">
-												</div>
-											</div>
-											<div class="col-md-6">
-												<div class="input-item input-item-email ltn__custom-icon">
-													<input type="email" name="ltn__email" placeholder="Enter email address">
-												</div>
-											</div>
-										</div>
-										<button class="btn theme-btn-1 btn-effect-1 text-uppercase">Login</button>
-										<label class="input-info-save mb-0"><input type="checkbox" name="agree">
-											Remember me</label>
-										<p class="mt-30">
-											<a href="register.html">Lost your password?</a>
-										</p>
-									</form>
+									{{
+                    render(controller('App\\Controller\\SecurityController::login'
+                    ))
+                  }}
+
 								</div>
 							</div>
 						</div>
@@ -78,13 +63,14 @@
 						</div>
 						<div class="ltn__checkout-single-content mt-50">
 							<h4 class="title-2">Billing Details</h4>
+
+							{% for flash_error in app.flashes('verify_email_error') %}
+								<div class="alert.alert-danger" role="alert">{{ flash_error }}</div>
+							{% endfor %}
 							<div class="ltn__checkout-single-content-info">
 								{{
-									render(
-										Controller('
-										App\\Controller\\RegistrationController::register
-										')
-									)
+									render(controller('App\\Controller\\RegistrationController::register'
+										))
 								}}
 							</div>
 						</div>

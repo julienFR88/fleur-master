@@ -56,11 +56,15 @@ class Product
   #[ORM\Column(nullable: true)]
   private ?\DateTimeImmutable $StartsAt = null;
 
-  #[ORM\Column]
+  #[ORM\Column(nullable: true)]
   private ?\DateTimeImmutable $EndsAt = null;
 
   #[ORM\Column(type: Types::TEXT, nullable: true)]
   private ?string $Content = null;
+
+  #[ORM\ManyToOne(inversedBy: 'Products')]
+  #[ORM\JoinColumn(nullable: false)]
+  private ?User $UserId = null;
 
   public function getId(): ?int
   {
@@ -257,5 +261,17 @@ class Product
     $this->Content = $Content;
 
     return $this;
+  }
+
+  public function getUserId(): ?User
+  {
+      return $this->UserId;
+  }
+
+  public function setUserId(?User $UserId): self
+  {
+      $this->UserId = $UserId;
+
+      return $this;
   }
 }
