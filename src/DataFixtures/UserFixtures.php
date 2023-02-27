@@ -35,7 +35,7 @@ class UserFixtures extends Fixture
     $user->setLastName('DEVAUX');
     $user->setMobile('0766068003');
     $user->setVendor('1');
-    $user->setRegistredAt(new \DateTimeImmutable);
+    $user->setRegisteredAt(new \DateTimeImmutable);
     $user->setLastLogin(new \DateTimeImmutable);
     $user->setIntro('1');
     $user->setProfile('Je suis le créateur de ce site');
@@ -62,7 +62,7 @@ class UserFixtures extends Fixture
       $user->setFirstName($faker->firstName());
       $user->setMiddleName($faker->firstName());
       $user->setLastName($faker->lastName());
-      $user->setRegistredAt($date);
+      $user->setRegisteredAt($date);
 
       // Sachan que le User dois avoir un profile valide je met une condition a 1
       if ($IsVerified == 1) {
