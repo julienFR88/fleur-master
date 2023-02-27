@@ -2,12 +2,12 @@
 
 namespace App\DataFixtures;
 
+use Faker;
 use App\Entity\Product;
 use DateTimeImmutable;
+use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
-use Doctrine\Persistence\ObjectManager;
-use Faker;
 
 class ProductFixtures extends Fixture implements DependentFixtureInterface
 {
@@ -15,37 +15,44 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
     {
         $faker = Faker\Factory::create();
 
-        for( $i = 0; $i <= 150; $i++)
-        {
-            $userId = $this->getReference('user_' . '0' );
+        for ($i = 0; $i <= 150; $i++) {
+            $userId = $this->getReference('user_' . '0');
 
-            $randomType = rand(0,3);
-            $randomPrice = rand(100,1000);
-            $randomDiscount = rand(0,100);
-            $randomQuantity = rand(0,100);
+            // Je dchoisie des chiffre au hasard pour les date de création de produit
+            $CreationDate = rand(1, 365);
+            $CreatedAt    = new DateTimeImmutable;
+            $CreatedAt    = $CreatedAt->modify('-' . $CreationDate . ' day');
+
+            // pour des raison d'affichage de veux un produit qui a un discount avec un discount entre deus date
+            $DiscountDateStart = rand(1, 5);
+            $DiscountAtStart   = new DateTimeImmutable;
+            $DiscountAtStart   = $DiscountAtStart->modify('+' . $DiscountDateStart . ' day');
+
+            $DiscountDateEnd = rand(6, 10);
+            $DiscountAtEnd   = new DateTimeImmutable;
+            $DiscountAtEnd   = $DiscountAtEnd->modify('+' . $DiscountDateEnd . ' day');
 
             $product = new Product();
-            $product->setTitle( $faker->sentence(3) );
-            $product->setMetaTitle( $faker->sentence(3) );
-            $product->setSlug( $faker->slug() );
-            $product->setSummary( $faker->sentence(10) );
-            $product->setType( $randomType );
-            $product->setSku( $faker->ean13() );
-            $product->setPrice( $randomPrice );
-            $product->setQuantity( $randomQuantity );
-            $product->setShop( '1' );
-            $product->setCreatedAt( new DateTimeImmutable );
-            $product->setUpdatedAt( new DateTimeImmutable );
- $product->setPublishedAt( new DateTimeImmutable );
+            $product->setTitle($faker->sentence(3));
+            $product->setMetaTitle($faker->sentence(3));
+            $product->setSlug($faker->slug());
+            $product->setSummary($faker->sentence(10));
+            $product->setType($faker->numberBetween(0, 3));
+            $product->setSku($faker->ean13());
+            $product->setPrice($faker->randomFloat(2));
+            $product->setQuantity($faker->numberBetween(100, 1000));
+            $product->setShop('1');
+            $product->setCreatedAt($CreatedAt);
+            $product->setUpdatedAt($CreatedAt);
+            $product->setPublishedAt(new DateTimeImmutable);
 
-            if ( $randomType == 1) {
-                $product->setDiscount( $randomDiscount );
-               
-                $product->setStartsAt( new DateTimeImmutable );
-                $product->setEndsAt( new DateTimeImmutable );
+            if (rand(0, 3) == 1) {
+                $product->setDiscount($faker->numberBetween(10, 50));
+                $product->setStartsAt($DiscountAtStart);
+                $product->setEndAt($DiscountAtEnd);
             }
 
-            $product->setUserId( $userId );
+            $product->setUserId($userId);
 
             $manager->persist($product);
         }
@@ -56,7 +63,7 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
     public function getDependencies()
     {
         return [
-          UserFixtures::class
+            UserFixtures::class,
         ];
     }
 }

@@ -1,0 +1,10 @@
+vich_uploader:
+  db_driver: orm
+
+  mappings:
+    product:
+      uri_prefix: /img/product
+      upload_destination: '%kernel.project_dir%/public/img/product'
+      namer: Vich\UploaderBundle\Naming\Uniqidnamer
+      delete_on_remove: true # supprime la photo lors de la suppression d'un product
+      delete_on_update: false # ne supprime pas les photos précédente de l'update d'un product
