@@ -59,7 +59,7 @@ class Product
   private ?\DateTimeImmutable $StartsAt = null;
 
   #[ORM\Column(nullable: true)]
-  private ?\DateTimeImmutable $EndsAt = null;
+  private ?\DateTimeImmutable $EndAt = null;
 
   #[ORM\Column(type: Types::TEXT, nullable: true)]
   private ?string $Content = null;
@@ -71,9 +71,10 @@ class Product
   #[ORM\OneToMany(mappedBy: 'Product', targetEntity: Pictures::class)]
   private Collection $Pictures;
 
+
   public function __construct()
   {
-      $this->Pictures = new ArrayCollection();
+    $this->Pictures = new ArrayCollection();
   }
 
   public function getId(): ?int
@@ -249,14 +250,14 @@ class Product
     return $this;
   }
 
-  public function getEndsAt(): ?\DateTimeImmutable
+  public function getEndAt(): ?\DateTimeImmutable
   {
-    return $this->EndsAt;
+    return $this->EndAt;
   }
 
-  public function setEndsAt(\DateTimeImmutable $EndsAt): self
+  public function setEndAt(?\DateTimeImmutable $EndAt): self
   {
-    $this->EndsAt = $EndsAt;
+    $this->EndAt = $EndAt;
 
     return $this;
   }
@@ -275,14 +276,14 @@ class Product
 
   public function getUserId(): ?User
   {
-      return $this->UserId;
+    return $this->UserId;
   }
 
   public function setUserId(?User $UserId): self
   {
-      $this->UserId = $UserId;
+    $this->UserId = $UserId;
 
-      return $this;
+    return $this;
   }
 
   /**
@@ -290,28 +291,28 @@ class Product
    */
   public function getPictures(): Collection
   {
-      return $this->Pictures;
+    return $this->Pictures;
   }
 
   public function addPicture(Pictures $picture): self
   {
-      if (!$this->Pictures->contains($picture)) {
-          $this->Pictures->add($picture);
-          $picture->setProduct($this);
-      }
+    if (!$this->Pictures->contains($picture)) {
+      $this->Pictures->add($picture);
+      $picture->setProduct($this);
+    }
 
-      return $this;
+    return $this;
   }
 
   public function removePicture(Pictures $picture): self
   {
-      if ($this->Pictures->removeElement($picture)) {
-          // set the owning side to null (unless already changed)
-          if ($picture->getProduct() === $this) {
-              $picture->setProduct(null);
-          }
+    if ($this->Pictures->removeElement($picture)) {
+      // set the owning side to null (unless already changed)
+      if ($picture->getProduct() === $this) {
+        $picture->setProduct(null);
       }
+    }
 
-      return $this;
+    return $this;
   }
 }

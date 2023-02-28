@@ -49,7 +49,7 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
             if (rand(0, 3) == 1) {
                 $product->setDiscount($faker->numberBetween(10, 50));
                 $product->setStartsAt($DiscountAtStart);
-                $product->setEndsAt($DiscountAtEnd);
+                $product->setEndAt($DiscountAtEnd);
             }
 
             $product->setUserId($userId);

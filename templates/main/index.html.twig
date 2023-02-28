@@ -13,5 +13,35 @@
 	{% include 'main/_partials/teams.html.twig' %}
 	{% include 'main/_partials/newsletter.html.twig' %}
 
+	
+{% endblock %}
+{% block javascripts %}
+<script>
+	$(document).ready(function () {
+		$(".AddToCart").on("click", function (event) {
+			event.preventDefault();
+			var id = $(this).data("id");
+
+			// je vais l'envoyer en AJAX
+			$.ajax({
+				url: "{{ path('app_modal_addtocart') }}",
+				type: "GET",
+				data: {id: id}
+				dataType: 'json',
+				async: true,
+				success: function (data, status) {
+					// console.log(data);
+
+					let title = data.Titre;
+					let image = data.Image;
+					let slug = data.Slug;
+
+					$(".InjectTitle").text(title);
+					// $(".injectImage").attr(image);
+				}
+			});
+		});
+	});
+</script>
 
 {% endblock %}

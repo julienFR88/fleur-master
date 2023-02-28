@@ -29,8 +29,8 @@
 	</head>
 	<body>
 		<!--[if lte IE 9]>
-		            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
-		        <![endif]-->
+				            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+				        <![endif]-->
 
 		<div class="body-wrapper">
 			{% include '_partials/ltn__header-top-area.html.twig' %}
@@ -56,13 +56,15 @@
 		<!-- preloader area end -->
 
 		{{ encore_entry_script_tags('app') }}
-		{% block javascripts %}{% endblock %}
 		<!-- All JS Plugins -->
-		<script src="js/plugins.js"></script>
+<script src="{{ asset('js/plugins.js') }}"></script>
+
 		<!-- Main JS -->
-		<script src="js/main.js"></script>
-		<script>
-			
-		</script>
+		<script src="{{ asset('js/main.js') }}"></script>
+		{% block javascripts %}{% endblock %}
+
 	</body>
 </html>
+
+
+{# mettre la photo + le titre + l'url une fois la modal addCart  #}

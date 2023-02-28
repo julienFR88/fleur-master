@@ -36,7 +36,7 @@
 										</a>
 									</li>
 									<li class="add-to-cart">
-										<a href="{{ path('cart_index', {'id': product.Id}) }}" title="Add to Cart" data-bs-toggle="modal" data-bs-target="#add_to_cart_modal">
+										<a href="" class="AddToCart" data-id="{{ product.Id }}" title="Add to Cart" data-bs-toggle="modal" data-bs-target="#add_to_cart_modal">
 											<span class="cart-text d-none d-xl-block">Add to Cart</span>
 											<span class="d-block d-xl-none">
 												<i class="icon-handbag"></i>
@@ -51,15 +51,15 @@
 								</ul>
 							</div>
 							{% set DateJour = "now"|date("Y/m/d") %}
-							{% if product.EndsAt|date("Y/m/d") > DateJour %}
+							{% if product.EndAt|date("Y/m/d") > DateJour %}
 							<div class="ltn__product-countdown">
-								<div class="ltn__countdown" data-countdown="{{product.EndsAt|date("Y/m/d")}}"></div>
+								<div class="ltn__countdown" data-countdown="{{product.EndAt|date("Y/m/d")}}"></div>
 							</div>
 							{% endif %}
 						</div>
 						<div class="product-info">
 							<h2 class="product-title">
-								<a href="{{ path('app_product', {'slug' : product.Slug} ) }}">
+								<a href="{{ path('app_product', {'slug' : product.Slug}) }}">
 									{{ product.Title }}
 								</a>
 							</h2>
