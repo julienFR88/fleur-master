@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\OrderRepository;
+use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -16,71 +17,92 @@ class Order
   private ?int $id = null;
 
   #[ORM\Column(length: 100)]
-  private ?string $Token = null;
+  private ?string $token = null;
 
   #[ORM\Column(type: Types::SMALLINT, nullable: true)]
-  private ?int $Status = null;
+  private ?int $status = null;
 
   #[ORM\Column(nullable: true)]
-  private ?float $SubTotal = null;
+  private ?float $subTotal = null;
 
   #[ORM\Column(nullable: true)]
-  private ?float $ItemDiscount = null;
+  private ?float $itemDiscount = null;
 
   #[ORM\Column(nullable: true)]
-  private ?float $Tax = null;
+  private ?float $tax = null;
 
   #[ORM\Column(nullable: true)]
-  private ?float $Shipping = null;
+  private ?float $shipping = null;
 
   #[ORM\Column(nullable: true)]
-  private ?float $Total = null;
+  private ?float $total = null;
 
   #[ORM\Column(length: 50, nullable: true)]
-  private ?string $Promo = null;
+  private ?string $promo = null;
 
   #[ORM\Column(nullable: true)]
-  private ?float $Discount = null;
+  private ?float $discount = null;
 
   #[ORM\Column(nullable: true)]
-  private ?float $GrandTotal = null;
+  private ?float $grandTotal = null;
+
+  #[ORM\Column(length: 50)]
+
+  private ?string $firstName = null;
+
+  #[ORM\Column(length: 50)]
+  private ?string $middleName = null;
+
+  #[ORM\Column(length: 50)]
+
+  private ?string $lastName = null;
+
+  #[ORM\Column(length: 15)]
+
+  private ?string $mobile = null;
 
   #[ORM\Column(length: 50, nullable: true)]
-  private ?string $FirstName = null;
+  private ?string $email = null;
+
+  #[ORM\Column(length: 50)]
+
+  private ?string $line1 = null;
 
   #[ORM\Column(length: 50, nullable: true)]
-  private ?string $MiddleName = null;
+  private ?string $line2 = null;
 
-  #[ORM\Column(length: 50, nullable: true)]
-  private ?string $LastName = null;
+  #[ORM\Column(length: 50)]
 
-  #[ORM\Column(length: 15, nullable: true)]
-  private ?string $Mobile = null;
+  private ?string $city = null;
 
-  #[ORM\Column(length: 50, nullable: true)]
-  private ?string $Email = null;
+  #[ORM\Column(length: 50)]
 
-  #[ORM\Column(length: 50, nullable: true)]
-  private ?string $Line1 = null;
+  private ?string $province = null;
 
-  #[ORM\Column(length: 50, nullable: true)]
-  private ?string $Line2 = null;
+  #[ORM\Column(length: 50)]
 
-  #[ORM\Column(length: 50, nullable: true)]
-  private ?string $City = null;
-
-  #[ORM\Column(length: 50, nullable: true)]
-  private ?string $Province = null;
+  private ?string $country = null;
 
   #[ORM\Column]
-  private ?\DateTimeImmutable $CreatedAt = null;
+  private ?\DateTimeImmutable $createdAt = null;
 
-  #[ORM\Column(nullable: true)]
-  private ?\DateTimeImmutable $UpdatedAt = null;
+  #[ORM\Column]
+  private ?\DateTimeImmutable $updatedAt = null;
 
   #[ORM\Column(type: Types::TEXT, nullable: true)]
-  private ?string $Content = null;
+  private ?string $content = null;
 
+  #[ORM\Column(length: 10)]
+  private ?string $Zip = null;
+
+  #[ORM\ManyToOne(inversedBy: 'orders')]
+  private ?User $Utilisateur = null;
+
+  public function __construct()
+  {
+    $this->UpdatedAt(new \DateTimeImmutable('now'));
+    $this->CreatedAt(new \DateTimeImmutable('now'));
+  }
   public function getId(): ?int
   {
     return $this->id;
@@ -88,265 +110,301 @@ class Order
 
   public function getToken(): ?string
   {
-    return $this->Token;
+    return $this->token;
   }
 
-  public function setToken(string $Token): self
+  public function setToken(string $token): self
   {
-    $this->Token = $Token;
+    $this->token = $token;
 
     return $this;
   }
 
   public function getStatus(): ?int
   {
-    return $this->Status;
+    return $this->status;
   }
 
-  public function setStatus(?int $Status): self
+  public function setStatus(int $status): self
   {
-    $this->Status = $Status;
+    $this->status = $status;
 
     return $this;
   }
 
   public function getSubTotal(): ?float
   {
-    return $this->SubTotal;
+    return $this->subTotal;
   }
 
-  public function setSubTotal(?float $SubTotal): self
+  public function setSubTotal(float $subTotal): self
   {
-    $this->SubTotal = $SubTotal;
+    $this->subTotal = $subTotal;
 
     return $this;
   }
 
   public function getItemDiscount(): ?float
   {
-    return $this->ItemDiscount;
+    return $this->itemDiscount;
   }
 
-  public function setItemDiscount(?float $ItemDiscount): self
+  public function setItemDiscount(float $itemDiscount): self
   {
-    $this->ItemDiscount = $ItemDiscount;
+    $this->itemDiscount = $itemDiscount;
 
     return $this;
   }
 
   public function getTax(): ?float
   {
-    return $this->Tax;
+    return $this->tax;
   }
 
-  public function setTax(?float $Tax): self
+  public function setTax(float $tax): self
   {
-    $this->Tax = $Tax;
+    $this->tax = $tax;
 
     return $this;
   }
 
   public function getShipping(): ?float
   {
-    return $this->Shipping;
+    return $this->shipping;
   }
 
-  public function setShipping(?float $Shipping): self
+  public function setShipping(float $shipping): self
   {
-    $this->Shipping = $Shipping;
+    $this->shipping = $shipping;
 
     return $this;
   }
 
   public function getTotal(): ?float
   {
-    return $this->Total;
+    return $this->total;
   }
 
-  public function setTotal(?float $Total): self
+  public function setTotal(float $total): self
   {
-    $this->Total = $Total;
+    $this->total = $total;
 
     return $this;
   }
 
   public function getPromo(): ?string
   {
-    return $this->Promo;
+    return $this->promo;
   }
 
-  public function setPromo(?string $Promo): self
+  public function setPromo(?string $promo): self
   {
-    $this->Promo = $Promo;
+    $this->promo = $promo;
 
     return $this;
   }
 
   public function getDiscount(): ?float
   {
-    return $this->Discount;
+    return $this->discount;
   }
 
-  public function setDiscount(?float $Discount): self
+  public function setDiscount(float $discount): self
   {
-    $this->Discount = $Discount;
+    $this->discount = $discount;
 
     return $this;
   }
 
   public function getGrandTotal(): ?float
   {
-    return $this->GrandTotal;
+    return $this->grandTotal;
   }
 
-  public function setGrandTotal(?float $GrandTotal): self
+  public function setGrandTotal(float $grandTotal): self
   {
-    $this->GrandTotal = $GrandTotal;
+    $this->grandTotal = $grandTotal;
 
     return $this;
   }
 
   public function getFirstName(): ?string
   {
-    return $this->FirstName;
+    return $this->firstName;
   }
 
-  public function setFirstName(?string $FirstName): self
+  public function setFirstName(string $firstName): self
   {
-    $this->FirstName = $FirstName;
+    $this->firstName = $firstName;
 
     return $this;
   }
 
   public function getMiddleName(): ?string
   {
-    return $this->MiddleName;
+    return $this->middleName;
   }
 
-  public function setMiddleName(?string $MiddleName): self
+  public function setMiddleName(string $middleName): self
   {
-    $this->MiddleName = $MiddleName;
+    $this->middleName = $middleName;
 
     return $this;
   }
 
   public function getLastName(): ?string
   {
-    return $this->LastName;
+    return $this->lastName;
   }
 
-  public function setLastName(?string $LastName): self
+  public function setLastName(string $lastName): self
   {
-    $this->LastName = $LastName;
+    $this->lastName = $lastName;
 
     return $this;
   }
 
   public function getMobile(): ?string
   {
-    return $this->Mobile;
+    return $this->mobile;
   }
 
-  public function setMobile(?string $Mobile): self
+  public function setMobile(string $mobile): self
   {
-    $this->Mobile = $Mobile;
+    $this->mobile = $mobile;
 
     return $this;
   }
 
   public function getEmail(): ?string
   {
-    return $this->Email;
+    return $this->email;
   }
 
-  public function setEmail(?string $Email): self
+  public function setEmail(string $email): self
   {
-    $this->Email = $Email;
+    $this->email = $email;
 
     return $this;
   }
 
   public function getLine1(): ?string
   {
-    return $this->Line1;
+    return $this->line1;
   }
 
-  public function setLine1(?string $Line1): self
+  public function setLine1(string $line1): self
   {
-    $this->Line1 = $Line1;
+    $this->line1 = $line1;
 
     return $this;
   }
 
   public function getLine2(): ?string
   {
-    return $this->Line2;
+    return $this->line2;
   }
 
-  public function setLine2(?string $Line2): self
+  public function setLine2(string $line2): self
   {
-    $this->Line2 = $Line2;
+    $this->line2 = $line2;
 
     return $this;
   }
 
   public function getCity(): ?string
   {
-    return $this->City;
+    return $this->city;
   }
 
-  public function setCity(?string $City): self
+  public function setCity(string $city): self
   {
-    $this->City = $City;
+    $this->city = $city;
 
     return $this;
   }
 
   public function getProvince(): ?string
   {
-    return $this->Province;
+    return $this->province;
   }
 
-  public function setProvince(?string $Province): self
+  public function setProvince(string $province): self
   {
-    $this->Province = $Province;
+    $this->province = $province;
+
+    return $this;
+  }
+
+  public function getCountry(): ?string
+  {
+    return $this->country;
+  }
+
+  public function setCountry(string $country): self
+  {
+    $this->country = $country;
 
     return $this;
   }
 
   public function getCreatedAt(): ?\DateTimeImmutable
   {
-    return $this->CreatedAt;
+    return $this->createdAt;
   }
 
-  public function setCreatedAt(\DateTimeImmutable $CreatedAt): self
+  public function setCreatedAt(\DateTimeImmutable $createdAt): self
   {
-    $this->CreatedAt = $CreatedAt;
+    $this->createdAt = $createdAt;
 
     return $this;
   }
 
   public function getUpdatedAt(): ?\DateTimeImmutable
   {
-    return $this->UpdatedAt;
+    return $this->updatedAt;
   }
 
-  public function setUpdatedAt(?\DateTimeImmutable $UpdatedAt): self
+  public function setUpdatedAt(\DateTimeImmutable $updatedAt): self
   {
-    $this->UpdatedAt = $UpdatedAt;
+    $this->updatedAt = $updatedAt;
 
     return $this;
   }
 
   public function getContent(): ?string
   {
-    return $this->Content;
+    return $this->content;
   }
 
-  public function setContent(?string $Content): self
+  public function setContent(string $content): self
   {
-    $this->Content = $Content;
+    $this->content = $content;
 
     return $this;
+  }
+
+  public function getZip(): ?string
+  {
+    return $this->Zip;
+  }
+
+  public function setZip(string $Zip): self
+  {
+    $this->Zip = $Zip;
+
+    return $this;
+  }
+
+  public function getUtilisateur(): ?User
+  {
+      return $this->Utilisateur;
+  }
+
+  public function setUtilisateur(?User $Utilisateur): self
+  {
+      $this->Utilisateur = $Utilisateur;
+
+      return $this;
   }
 }

@@ -16,21 +16,27 @@
 		{% block stylesheets %}{% endblock %}
 		<!-- Font Icons css -->
 		<link
-		rel="stylesheet" href="css/font-icons.css">
+		rel="stylesheet" href="{{ asset('css/font-icons.css') }}">
+
 		<!-- plugins css -->
 		<link
-		rel="stylesheet" href="css/plugins.css">
+		rel="stylesheet" href="{{ asset('css/plugins.css') }}">
+
+
 		<!-- Main Stylesheet -->
 		<link
-		rel="stylesheet" href="css/style.css">
+		rel="stylesheet" href="{{ asset('css/style.css') }}">
+
+
 		<!-- Responsive css -->
-		<link rel="stylesheet" href="css/responsive.css">
+		<link rel="stylesheet" href="{{ asset('css/responsive.css') }}">
+
 
 	</head>
 	<body>
 		<!--[if lte IE 9]>
-				            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
-				        <![endif]-->
+						            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+						        <![endif]-->
 
 		<div class="body-wrapper">
 			{% include '_partials/ltn__header-top-area.html.twig' %}
@@ -57,7 +63,7 @@
 
 		{{ encore_entry_script_tags('app') }}
 		<!-- All JS Plugins -->
-<script src="{{ asset('js/plugins.js') }}"></script>
+		<script src="{{ asset('js/plugins.js') }}"></script>
 
 		<!-- Main JS -->
 		<script src="{{ asset('js/main.js') }}"></script>

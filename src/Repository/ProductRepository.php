@@ -39,6 +39,28 @@ class ProductRepository extends ServiceEntityRepository
     }
   }
 
+    /**
+     * @return product[]
+     */
+    public function getAllDiscountProducts(): array
+    {
+      return $this->createQueryBuilder('p')
+              ->andWhere('p.Discount IS NOT NULL')
+              ->orderBy('p.Discount', 'DESC')
+              ->setMaxResults(10)
+              ->getQuery()
+              ->getResult() // le getResult permet d'afficher tout les résultats dans un tableau
+      ;
+    }
+
+    // getSingleResult() récupere un seul et unique objet. SI malheureusement il y a plus d'un objet, cela affichera un message d'erreur
+    // getOneOrNullResult() retourne un seul objet, s'il y a plusieurs objet, cela afficcher un message d'erreur. Si null, rien ne sera retourné
+    // getArrayresult() retourne les résult sous forme de tableaux imbriqués au lieu de renvoyer un collection array
+    // getScalarResult() retourne des values scalaire pouvant contenir des données en double
+    // getOneScalarResult() retourne une seule value scalaire pouvant contenir des données en double
+
+
+
   //    /**
   //     * @return Product[] Returns an array of Product objects
   //     */

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Repository\ProductRepository;
+use Stripe\Discount;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -14,7 +15,8 @@ class MainController extends AbstractController
   public function index(ProductRepository $productRepository): Response
   {
     return $this->render('main/index.html.twig', [
-      'newproducts' => $productRepository->findBy([],['PublishedAt' => 'DESC'], 8)
+      'newproducts' => $productRepository->findBy([],['PublishedAt' => 'DESC'], 8),
+      'discount' => $productRepository->getAllDiscountProducts(),
     ]);
   }
 }

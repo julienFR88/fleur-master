@@ -21,16 +21,16 @@
 		$(".AddToCart").on("click", function (event) {
 			event.preventDefault();
 			var id = $(this).data("id");
-
+console.log(id);
 			// je vais l'envoyer en AJAX
 			$.ajax({
 				url: "{{ path('app_modal_addtocart') }}",
 				type: "GET",
-				data: {id: id}
+				data: {id: id},
 				dataType: 'json',
 				async: true,
 				success: function (data, status) {
-					// console.log(data);
+					// 
 
 					let title = data.Titre;
 					let image = data.Image;
