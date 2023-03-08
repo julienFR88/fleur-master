@@ -8,19 +8,17 @@ class StripeServices
 {
   public function PaiementStripe($cancel, $items)
   {
-
-    $lineItems = [];
+    $LineItems = [];
     foreach ($items as $item) {
-
-      $lineItems[] =
+      $LineItems[] =
         [
           'price_data' => [
             'currency' => 'eur',
-            'unit_amount' => $item['product']->getPrice() * 100,
+            'unit_amount' => $item['produit']->getPrice() * 100,
             'product_data' => [
-              'name' => $item['product']->getTitle(),
+              'name' => $item['produit']->getTitle(),
               'images' => [
-                "http://127.0.0.1:8000/img/product/" . $item['product']->getPictures()->getValues()[0]->getImageName(),
+                "https://127.0.0.1:8000/img/product/" . $item['produit']->getPictures()->getValues()[0]->getImageName(),
               ],
             ],
           ],
@@ -28,17 +26,19 @@ class StripeServices
         ];
     }
 
-    // $StripeSK = 'sk_test_51Mh9SbArgZcue3lGZySKqjTES99T5b20z8AdVYzetGI73EuAMSUj5OstoXCoBXyhVbIVHC4OCp0mNk1n7bVD93rF000LJR8EUK';
-    $StripeSK = $_ENV['StripeSK'];
+    $StripeSK = $_ENV['STRIPE_SK'];
     Stripe::setApiKey($StripeSK);
 
     $session = \Stripe\Checkout\Session::create([
       'payment_method_types' => ['card'],
-      'line_items' => [$lineItems],
+      'line_items' => [$LineItems],
       'mode' => 'payment',
-      'success_url' => "https://127.0.0.1:8000/profile/success" . "?session_id={CHECKOUT_SESSION_ID}",           //$sessions->retrieve($request->query->get('session_id')),
+      'success_url' =>  "https://127.0.0.1:8000/profile/success?session_id={CHECKOUT_SESSION_ID}",
       'cancel_url' => $cancel,
     ]);
+
+    // dd($session);
+
     return $session;
   }
 }

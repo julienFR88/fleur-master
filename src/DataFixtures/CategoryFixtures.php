@@ -58,6 +58,8 @@ class CategoryFixtures extends Fixture
       $cat->setTitle($value['titre']);
       $manager->persist($cat);
 
+      $this->addReference('category_' .$key, $cat);
+
     }
     $manager->flush();
   }
