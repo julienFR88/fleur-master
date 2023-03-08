@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\OrderRepository;
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -96,12 +98,18 @@ class Order
   private ?string $Zip = null;
 
   #[ORM\ManyToOne(inversedBy: 'orders')]
+  #[ORM\JoinColumn(onDelete: "CASCADE")]
   private ?User $Utilisateur = null;
+
+  #[ORM\OneToMany(mappedBy: 'Orders', targetEntity: Cart::class)]
+  #[ORM\JoinColumn(onDelete: "CASCADE")]
+  private Collection $carts;
 
   public function __construct()
   {
     $this->UpdatedAt(new \DateTimeImmutable('now'));
     $this->CreatedAt(new \DateTimeImmutable('now'));
+    $this->carts = new ArrayCollection();
   }
   public function getId(): ?int
   {
@@ -404,6 +412,36 @@ class Order
   public function setUtilisateur(?User $Utilisateur): self
   {
       $this->Utilisateur = $Utilisateur;
+
+      return $this;
+  }
+
+  /**
+   * @return Collection<int, Cart>
+   */
+  public function getCarts(): Collection
+  {
+      return $this->carts;
+  }
+
+  public function addCart(Cart $cart): self
+  {
+      if (!$this->carts->contains($cart)) {
+          $this->carts->add($cart);
+          $cart->setOrders($this);
+      }
+
+      return $this;
+  }
+
+  public function removeCart(Cart $cart): self
+  {
+      if ($this->carts->removeElement($cart)) {
+          // set the owning side to null (unless already changed)
+          if ($cart->getOrders() === $this) {
+              $cart->setOrders(null);
+          }
+      }
 
       return $this;
   }

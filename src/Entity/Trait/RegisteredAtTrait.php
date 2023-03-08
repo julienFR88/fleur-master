@@ -20,4 +20,5 @@ trait RegisteredAtTrait
 
     return $this;
   }
+
 }

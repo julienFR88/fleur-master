@@ -6,7 +6,7 @@ use Stripe\Stripe;
 
 class StripeServices
 {
-  public function PaiementStripe($success, $cancel, $items)
+  public function PaiementStripe($cancel, $items)
   {
 
     $lineItems = [];
@@ -36,7 +36,7 @@ class StripeServices
       'payment_method_types' => ['card'],
       'line_items' => [$lineItems],
       'mode' => 'payment',
-      'success_url' => $success,
+      'success_url' => "https://127.0.0.1:8000/profile/success" . "?session_id={CHECKOUT_SESSION_ID}",           //$sessions->retrieve($request->query->get('session_id')),
       'cancel_url' => $cancel,
     ]);
     return $session;

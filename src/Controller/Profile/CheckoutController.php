@@ -2,20 +2,22 @@
 
 namespace App\Controller\Profile;
 
-use Stripe\Stripe;
+use App\Entity\Cart;
 use App\Entity\Order;
 use App\Form\OrderType;
-use App\Services\StripeServices;
-use App\Repository\UserRepository;
 use App\Repository\OrderRepository;
+use App\Repository\UserRepository;
 use App\Services\AddtocartServices;
+use App\Services\StripeServices;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Stripe\Stripe;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class CheckoutController extends AbstractController
 {
@@ -72,9 +74,9 @@ class CheckoutController extends AbstractController
     $form->handleRequest($request);
 
     if ($form->isSubmitted() && $form->isValid()) {
-      $success        = $this->generateUrl('success_url', [], UrlGeneratorInterface::ABSOLUTE_URL);
+      // $success        = $this->generateUrl('success_url', [], UrlGeneratorInterface::ABSOLUTE_URL);
       $cancel         = $this->generateUrl('cancel_url', [], UrlGeneratorInterface::ABSOLUTE_URL);
-      $ValidStripe    = $this->StripeServices->PaiementStripe($success, $cancel, $this->AddtocartServices->getFullCart());
+      $ValidStripe    = $this->StripeServices->PaiementStripe($cancel, $this->AddtocartServices->getFullCart());
       return $this->redirect($ValidStripe->url, 303);
     }
 
@@ -87,29 +89,77 @@ class CheckoutController extends AbstractController
 
   #[Route('/profile/success', name: 'success_url')]
   #[isGranted('ROLE_USER')]
-  public function success_url(Request $request, OrderRepository $Order): Response
+  public function success_url(Request $request, OrderRepository $order, ManagerRegistry $em): Response
   {
-    $UpdateOrder = $order->findOneBy(['Utilisateur' => $this->getUser()->getId()], ['id' => 'DESC']);
+    
+    $session_id_stripe = $request->query->get('session_id');
+    $stripe = new \Stripe\StripeClient('sk_test_51Mh9SbArgZcue3lGZySKqjTES99T5b20z8AdVYzetGI73EuAMSUj5OstoXCoBXyhVbIVHC4OCp0mNk1n7bVD93rF000LJR8EUK');
 
-    if (!UdateOrder) {
-      throw $this->createdNotFoundException('L\'utilisateur est inexistant');
+    $session = $stripe->checkout->sessions->retrieve($_GET['session_id']);
+    $customer = $stripe->customers->retrieve($session->customer);
+
+    $id_stripe = $customer->id;
+
+    
+    /*
+        $StripeSK = $_ENV['SK_TEST'];
+
+        $stripe = new \Stripe\StripeClient($StripeSK);
+
+        dd($stripe);
+
+        $session = $stripe->checkout->sessions->retrieve(
+            $request->query->get('session_id'),
+            []
+        );
+        */
+
+    $UpdateOrder = $order->findOneBy(
+      ['Utilisateur' => $this->getUser()->getId()],
+      ['id' => 'DESC']
+    );
+
+    //dd($UpdateOrder);
+
+    if (!$UpdateOrder) {
+      throw $this->createNotFoundException('L\'utilisateur n\'existe pas');
+    }
+    $UpdateOrder->setToken($id_stripe);
+    $UpdateOrder->setStatus(1); // 1 = payé
+    $UpdateOrder->setTax(0.2); // 20% de taxe
+    $UpdateOrder->setTotal($this->AddtocartServices->getTotal()); // total de la commande
+    $UpdateOrder->setSubTotal($this->AddtocartServices->getTotal() / 1.2); // total de la commande - taxe
+
+    $sessionCart = $this->AddtocartServices->getFullCart();
+
+    foreach ($sessionCart as $carts) {
+      $cart = new Cart();
+      $cart->setTitle($carts['product']->getTitle());
+      $cart->setPrice($carts['product']->getPrice());
+      $cart->setQuantity($carts['quantity']);
+      $cart->setSKU($carts['product']->getSKU());
+      $cart->setDiscount($carts['product']->getDiscount());
+      $cart->setOrders($UpdateOrder);
+      $em->getManager()->persist($cart);
+      // $em->getConnection()->beginTransaction();
     }
 
-    $UpdateOrder->setStatus(1); // 1 = payé
-    $UpdateOrder->setTax('0.2'); // 0.2 = pourcentage de tax
-    $UpdateOrder->setTotal($this->AddtocartServices->getTotal()); // affiche le montant avec les taxes
-    $UpdateOrder->setSubTotal($this->AddtocartServices->getTotal() / 1.2); // affiche le montant HT
-    $em->getManager->flush();
+    try {
+      // $em->getManager()->persist($order);
+      $em->getManager()->flush();
+    } catch (\Exception $e) {
+      throw $e;
+    }
 
-    return $this->render('profil/checkout/paiement_success.html.twig', [
-      'total' => $this->AddtocartServices-getTotal()
+
+    //$em = $this->getDoctrine()->getManager();
+    //$em->persist($UpdateOrder);
+
+
+    //dd($em->getManager());
+
+    return $this->render('profile/checkout/paiement_success.html.twig', [
+      'total' => $this->AddtocartServices->getTotal(),
     ]);
-  }
-
-  #[Route('/profile/cancel', name: 'cancel_url')]
-  #[isGranted('ROLE_USER')]
-  public function cancel_url(): Response
-  {
-    return $this->render('profil/checkout/paiement_cancel.html.twig');
   }
 }

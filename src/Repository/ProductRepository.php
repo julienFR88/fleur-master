@@ -53,7 +53,7 @@ class ProductRepository extends ServiceEntityRepository
       ;
     }
 
-    // getSingleResult() récupere un seul et unique objet. SI malheureusement il y a plus d'un objet, cela affichera un message d'erreur
+    // getSingleResult() récupere un seul et unique objet. SI malheureusement il y a plus d'un seul objet, cela affichera un message d'erreur
     // getOneOrNullResult() retourne un seul objet, s'il y a plusieurs objet, cela afficcher un message d'erreur. Si null, rien ne sera retourné
     // getArrayresult() retourne les résult sous forme de tableaux imbriqués au lieu de renvoyer un collection array
     // getScalarResult() retourne des values scalaire pouvant contenir des données en double
